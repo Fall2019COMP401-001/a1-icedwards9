@@ -13,8 +13,33 @@ public class A1Adept {
 		// Number of Items in the Store
 		int numItems = scan.nextInt();
 		
+		// Store Catalog 
+		itemsInStore[] stock = new itemsInStore[numItems];
+		for (int i = 0; i < numItems; i++) {
+			stock[i] = new itemsInStore();
+			stock[i].name = scan.next();
+			stock[i].price = scan.nextDouble();
+		}
+		
 		// Number of Costumers
-		int numCostum = scan.nextInt();
+		int numCustom = scan.nextInt();
+		
+		// Who's Shopping?
+		Customers[] customerList = new Customers[numCustom];
+		for (int i = 0; i < numCustom; i++) {
+			customerList[i] = new Customers();
+			customerList[i].first = scan.next();
+			customerList[i].last = scan.next();
+			customerList[i].cart = scan.nextInt();
+			
+			itemsInCart[] personalCart = new itemsInCart[customerList[i].cart];
+			for (int h = 0; h < customerList[i].cart; h++) {
+				personalCart[h] = new itemsInCart();
+				personalCart[h].quantity = scan.nextInt();
+				personalCart[h].title = scan.next();
+			}
+		}
+		
 	}
 
 	public static class itemsInStore {
@@ -32,7 +57,7 @@ public class A1Adept {
 		}
 	}
 	
-	public static class Costumers {
+	public static class Customers {
 		Scanner scan = new Scanner(System.in);
 
 		String first;
