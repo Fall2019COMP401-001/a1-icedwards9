@@ -46,9 +46,7 @@ public class A1Adept {
 				}
 			}
 
-			/* for (int k = 0; k < personalCart.length; k++) {
-				customerList[i].totalcost += personalCart[k].price;
-			} */
+		
 	// Finding the total
 			customerList[i].totalcost = totalCost(customerList[i].cart, personalCart, stock);
 	
@@ -57,15 +55,15 @@ public class A1Adept {
 		scan.close();
 		
 
-		// Biggest spender
+	// Biggest spender
 		Customers big = everybodyEats(customerList);
 		System.out.println("Biggest: " + big.first + " " + big.last + " (" + String.format("%.2f", big.totalcost) + ")");
 		
-		// Smallest spender
+	// Smallest spender
 		Customers little = couponQueen(customerList);
 		System.out.println("Smallest: " + little.first + " " + little.last + " (" + String.format("%.2f", little.totalcost) + ")");
 		
-		// Average
+	// Average
 		double avg = 0;
 		for (int i = 0; i < numCustom; i++) {
 			avg += customerList[i].totalcost;
@@ -77,6 +75,7 @@ public class A1Adept {
 
 	// Classes 
 	
+	// What's in stock at the store?
 	public static class itemsInStore {
 		Scanner scan = new Scanner(System.in);
 
@@ -92,6 +91,7 @@ public class A1Adept {
 		}
 	}
 	
+	// Who's Shopping
 	public static class Customers {
 		Scanner scan = new Scanner(System.in);
 
@@ -109,20 +109,10 @@ public class A1Adept {
 		public void numItemsPurchased () {
 			cart = scan.nextInt();
 		}
-		public double money (int numOfItems, itemsInCart[] personalCart, itemsInStore[] stock) {
-			double total = 0;
-			for (int i = 0; i < numOfItems; i++) {
-				for (int h = 0; h < stock.length; h++) {
-					if (personalCart[i].title == stock[h].name) {
-						total = total + (personalCart[i].quantity * stock[h].price);
-					}
-				} 	
-			}
-			return total;
-		}
 	
 	}
-	
+
+	// What's in the Shoppers' Carts
 	 public static class itemsInCart {
 		Scanner scan = new Scanner(System.in);
 		
@@ -162,7 +152,7 @@ public class A1Adept {
 	static Customers everybodyEats (Customers[] shoppers) {
 		Customers big = shoppers[0];
 		for (int i = 1; i < shoppers.length; i++) {
-			if (shoppers[i].totalcost > shoppers[i - 1].totalcost) {
+			if (shoppers[i].totalcost > big.totalcost) {
 				big = shoppers[i];
 			}
 		}
@@ -173,7 +163,7 @@ public class A1Adept {
 	static Customers couponQueen (Customers[] shoppers) {
 		Customers least = shoppers[0];
 		for (int i = 1; i < shoppers.length; i++) {
-			if (shoppers[i].totalcost < shoppers[i - 1].totalcost) {
+			if (shoppers[i].totalcost < least.totalcost) {
 				least = shoppers[i];
 			}
 		}
