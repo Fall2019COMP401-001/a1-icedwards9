@@ -13,7 +13,7 @@ public class A1Adept {
 		// Number of Items in the Store
 		int numItems = scan.nextInt();
 		
-		// Store Catalog 
+		// What's in stock at the store? 
 		itemsInStore[] stock = new itemsInStore[numItems];
 		for (int i = 0; i < numItems; i++) {
 			stock[i] = new itemsInStore();
@@ -21,49 +21,57 @@ public class A1Adept {
 			stock[i].price = scan.nextDouble();
 		}
 		
-		// Number of Costumers
+	// Number of Costumers
 		int numCustom = scan.nextInt();
 		
-		// Who's Shopping?
+	// Who's Shopping?
 		Customers[] customerList = new Customers[numCustom];
 		for (int i = 0; i < numCustom; i++) {
 			customerList[i] = new Customers();
 			customerList[i].first = scan.next();
 			customerList[i].last = scan.next();
 			customerList[i].cart = scan.nextInt();
-			// What's in their cart?
+			
+	// What's in their cart?	
 			itemsInCart[] personalCart = new itemsInCart[customerList[i].cart];
 			for (int h = 0; h < customerList[i].cart; h++) {
 				personalCart[h] = new itemsInCart();
 				personalCart[h].quantity = scan.nextInt();
 				personalCart[h].title = scan.next();
+				
+				for (int j = 0; j < stock.length; j++) {
+					if (personalCart[h].title.contentEquals(stock[j].name)) {
+						personalCart[h].price = personalCart[h].cost(stock[j].price);
+					} 
+				}
 			}
-			// Finding the total
-			double[] totals = new double[numCustom];
-			totals[i] = totalCost(customerList[i].cart, personalCart, stock);
-			customerList[i].totalcost = totals[i];
+
+			/* for (int k = 0; k < personalCart.length; k++) {
+				customerList[i].totalcost += personalCart[k].price;
+			} */
+	// Finding the total
+			customerList[i].totalcost = totalCost(customerList[i].cart, personalCart, stock);
+	
 		}
 		
 		scan.close();
 		
-		// Finding the total for each customer
-		
 
 		// Biggest spender
 		Customers big = everybodyEats(customerList);
-		System.out.println("Biggest: " + big.first + " " + big.last + " " + big.totalcost);
+		System.out.println("Biggest: " + big.first + " " + big.last + " (" + String.format("%.2f", big.totalcost) + ")");
 		
 		// Smallest spender
 		Customers little = couponQueen(customerList);
-		System.out.println("Smallest: " + little.first + " " + little.last + " " + little.totalcost);
+		System.out.println("Smallest: " + little.first + " " + little.last + " (" + String.format("%.2f", little.totalcost) + ")");
 		
 		// Average
-		int avg = 0;
+		double avg = 0;
 		for (int i = 0; i < numCustom; i++) {
 			avg += customerList[i].totalcost;
 		}
 		avg = avg / customerList.length;
-		System.out.println("Average: " + avg);
+		System.out.println("Average: " + String.format("%.2f", avg));
 		
 	}
 
@@ -91,7 +99,7 @@ public class A1Adept {
 		String last;
 		int cart;
 		double totalcost;
-		
+
 		public void firstName () {
 			first = scan.next();
 		}
@@ -101,13 +109,26 @@ public class A1Adept {
 		public void numItemsPurchased () {
 			cart = scan.nextInt();
 		}
+		public double money (int numOfItems, itemsInCart[] personalCart, itemsInStore[] stock) {
+			double total = 0;
+			for (int i = 0; i < numOfItems; i++) {
+				for (int h = 0; h < stock.length; h++) {
+					if (personalCart[i].title == stock[h].name) {
+						total = total + (personalCart[i].quantity * stock[h].price);
+					}
+				} 	
+			}
+			return total;
+		}
+	
 	}
 	
-	public static class itemsInCart {
+	 public static class itemsInCart {
 		Scanner scan = new Scanner(System.in);
 		
 		int quantity;
 		String title;
+		double price = 0;
 		
 		public void amount () {
 			quantity = scan.nextInt();
@@ -115,7 +136,11 @@ public class A1Adept {
 		public void whatsItCalled () {
 			title = scan.next();
 		}
-	}
+		public double cost (double stockPrice) {
+			price = stockPrice;
+			return price;
+		} 
+	} 
 	
 	// Functions
 	
@@ -123,27 +148,17 @@ public class A1Adept {
 	static double totalCost (int numOfItems, itemsInCart[] personalCart, itemsInStore[] stock) {
 		double total = 0;
 		for (int i = 0; i < numOfItems; i++) {
-			// figure out how to match the name of the items in the cart with that of the items in the store.
-			// may have something ton do with the i in the for loop
 			for (int h = 0; h < stock.length; h++) {
-				if (personalCart[i].title == stock[h].name) {
-					total += (personalCart[i].quantity * stock[h].price);
+				if (personalCart[i].title.contentEquals(stock[h].name)) {
+					total = total + (personalCart[i].quantity * stock[h].price);
 				}
-			} // not totally sure about this yet
+			} 
 		}
 		return total;
 	}
 	
-	// average money spend across ALL shoppers (requires array of each customer's total in main)
-	static double average (double[] all) {
-		double total = 0;
-		for (int i = 0; i < all.length; i++) {
-			total += all[i];
-		}
-		return (total / all.length);
-	}
 	
-	// biggest spender (also requires array of each total)
+	// biggest spender 
 	static Customers everybodyEats (Customers[] shoppers) {
 		Customers big = shoppers[0];
 		for (int i = 1; i < shoppers.length; i++) {
@@ -154,7 +169,7 @@ public class A1Adept {
 		return big;
 	}
 	
-	// least spender (same as above)
+	// least spender 
 	static Customers couponQueen (Customers[] shoppers) {
 		Customers least = shoppers[0];
 		for (int i = 1; i < shoppers.length; i++) {
