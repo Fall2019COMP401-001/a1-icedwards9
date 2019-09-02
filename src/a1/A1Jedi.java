@@ -25,7 +25,8 @@ public class A1Jedi {
 		int numCustomers = scan.nextInt();
 		
 		// boolean
-		boolean hasBought = false; // <-- Why is default value false?
+		boolean[] hasBought = new boolean[numItems + 1];
+		hasBought[0] = false;
 		
 		// Who's Shopping?
 		// Array of customers, their name and how many items they bought.
@@ -39,7 +40,6 @@ public class A1Jedi {
 			// What's in their cart?
 			// Array of the quantity and name of the items each costumer bought
 			itemsInCart[] cart = new itemsInCart[shoppers[i].numOfItemsBought];
-		//	itemStats[] stats = new itemStats[numItems];
 			for (int h = 0; h < shoppers[i].numOfItemsBought; h++) {
 				cart[h] = new itemsInCart();
 				cart[h].quantity = scan.nextInt();
@@ -51,17 +51,17 @@ public class A1Jedi {
 	
 				for (int k = 0; k < shoppers[i].numOfItemsBought; k++) {
 					if (stock[j].name.contentEquals(cart[k].name)) {
-						if (hasBought) {
+						if (hasBought[j]) {
 							stock[j].numBought += cart[k].quantity;
 							
 						} else {
 							stock[j].numPeople++;
 							stock[j].numBought += cart[k].quantity;
-							hasBought = true;
+							hasBought[j] = true;
 						}
 						
 					} else {
-						hasBought = false;
+						hasBought[j+1] = false; // or j-1?
 					}
 				}
 				
